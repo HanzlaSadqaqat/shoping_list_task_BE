@@ -20,12 +20,12 @@ export interface getShoppingList {
 
 const shoppingListSchema = new Schema({
   id: { type: String },
-  listId: { type: String, required: true },
+  listId: { type: Schema.Types.ObjectId, ref: "User" },
   sharedWith: { type: String, required: true },
-  permission: { type: String, required: true },
+  permission: { type: String, enum: permission, required: true },
 });
 
-const ShoppingList: Model<shareShoppingListDocument> =
+const ShareShoppingList: Model<shareShoppingListDocument> =
   mongoose.model<shareShoppingListDocument>("ShoppingList", shoppingListSchema);
 
-export default ShoppingList;
+export default ShareShoppingList;
