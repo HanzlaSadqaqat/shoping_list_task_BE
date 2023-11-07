@@ -8,7 +8,7 @@ export const shareShoppingListValidation = (
   data: shareShoppingListDocument
 ): Joi.ValidationResult =>
   Joi.object({
-    id: Joi.string().required(),
+    // id: Joi.string().required(),
     listId: Joi.string().required(),
     sharedWith: Joi.string().required(),
     permission: Joi.string().required(),
