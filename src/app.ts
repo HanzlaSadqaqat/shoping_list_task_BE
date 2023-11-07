@@ -4,6 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import router from "./routers/api";
 import dotenv from "dotenv";
+import { saveUsers } from "./preSeedData/preSeedUsers";
+import { saveList } from "./preSeedData/preSeedShoppingList";
 
 dotenv.config();
 const app = express();
@@ -15,10 +17,12 @@ const appPromise = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
   app.use("/api", router);
-  console.log("done");
+  app.use(saveUsers);
+  app.use(saveList);
   await mongoose.connect(`${process.env.MONGO_URI as string}`).then(() => {
     console.log("MongoDB connected");
   });
+
   app.listen(port, () => {
     console.log(`Server is running on port: http://localhost:${port} `);
   });

@@ -1,13 +1,31 @@
-import ShoppingList, {
+import ListModel from "../models/shoppingList";
+import ShareShoppingList from "../models/shareShoppingList";
+import {
   getShoppingList,
   shareShoppingListDocument,
 } from "../models/shareShoppingList";
-import { responseVerify } from "../models/user";
+import User, { responseVerify } from "../models/user";
+import { ObjectId } from "mongoose";
 
 class shareShoppingList {
-  async shareShoppingList(body): Promise<responseVerify> {
-    const { listId, sharedWith, permission, id } = body;
-    const newSharedList = new ShoppingList({
+  async shareShoppingList(body, id): Promise<responseVerify> {
+    const { listId, sharedWith, permission } = body;
+
+    const findList = await ListModel.findById({ _id: listId as ObjectId });
+    if (!findList)
+      throw {
+        code: 404,
+        message: "List not found",
+      };
+    const findUser = await User.findOne({ email: sharedWith as string });
+    console.log(findUser);
+    if (!findUser)
+      throw {
+        code: 404,
+        message: "User not found",
+      };
+
+    const newSharedList = new ShareShoppingList({
       id,
       listId,
       sharedWith,
@@ -20,11 +38,8 @@ class shareShoppingList {
     };
   }
   async getSharedShoppingList(id): Promise<getShoppingList> {
-    console.log("done");
-
     const findList: shareShoppingListDocument[] | null =
-      await ShoppingList.find(id);
-
+      await ShareShoppingList.find(id);
     console.log(findList);
 
     return {
